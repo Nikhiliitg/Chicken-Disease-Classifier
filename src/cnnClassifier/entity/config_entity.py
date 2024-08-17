@@ -1,31 +1,21 @@
-from cnnClassifier.constants import *
-from cnnClassifier.utils.common import read_yaml, create_directories
-from cnnClassifier.entity.config_entity import DataIngestionConfig
-       
-class ConfigurationManager:
-    def __init__(    
-        self,
-        config_filepath = CONFIG_FILE_PATH,
-        params_filepath = PARAMS_FILE_PATH):
-
-        self.config = read_yaml(config_filepath)
-        self.params = read_yaml(params_filepath)
-
-        create_directories([self.config.artifacts_root])
+from dataclasses import dataclass
+from pathlib import Path
 
 
+@dataclass(frozen=True)
+class DataIngestionConfig:
+    root_dir: Path
+    source_URL: str
+    local_data_file: Path
+    unzip_dir: Path
     
-    def get_data_ingestion_config(self) -> DataIngestionConfig:
-        config = self.config.data_ingestion
-
-        create_directories([config.root_dir])
-
-        data_ingestion_config = DataIngestionConfig(
-            root_dir=config.root_dir,
-            source_URL=config.source_URL,
-            local_data_file=config.local_data_file,
-            unzip_dir=config.unzip_dir 
-        )
-
-        return data_ingestion_config
-      
+@dataclass(frozen=True)
+class PrepareBaseModelConfig:
+    root_dir: Path
+    base_model_path: Path
+    updated_base_model_path: Path
+    params_image_size: list
+    params_learning_rate: float
+    params_include_top: bool
+    params_weights: str
+    params_classes: int      
